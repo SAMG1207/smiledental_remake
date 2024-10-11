@@ -1,0 +1,10 @@
+vendor/
+composer.json
+composer.lock
+
+
+*.tmp
+*.temp
+
+.DS_Store
+Thumbs.db
