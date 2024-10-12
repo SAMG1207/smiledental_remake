@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Database\Database;
+use PDO;
 
 Class DentistModel{
 
@@ -15,12 +16,12 @@ Class DentistModel{
     public function selectSpeacialties():array{
        $sql = "SELECT id_specialty FROM specialties";
        $stmt = $this->conn->query($sql);
-       $result = $stmt->fetchAll();
+       $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // RETURNS ONLY THE NUMBER
        return $result;
     }
 
     private function isAnSpeciality(int $number):bool{
-        
+        return in_array($number, $this->selectSpeacialties());
     }
 
     public function insertDentist(
