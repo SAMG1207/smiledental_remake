@@ -1,0 +1,61 @@
+# Activar la reescritura de URL
+RewriteEngine On
+
+# Establecer la ruta base para las reescrituras
+RewriteBase /smiledental/
+
+# Redirigir todas las solicitudes que no sean archivos o directorios existentes a index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Redirigir HTTP a HTTPS (Si necesitas HTTPS)
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Evitar el listado de directorios
+Options -Indexes
+
+# Establecer la página de inicio predeterminada
+DirectoryIndex index.php
+
+# Manejo de errores personalizados (opcional)
+# Descomenta y asegúrate de tener 404.php y 500.php en tu directorio
+# ErrorDocument 404 /404.php
+# ErrorDocument 500 /500.php
+
+# Prevenir el acceso directo a ciertos archivos (mejorado)
+<FilesMatch "\.(inc\.php|md|gitignore|htaccess)$">
+    Require all denied
+</FilesMatch>
+
+# Establecer la codificación de caracteres predeterminada
+AddDefaultCharset UTF-8
+
+# Habilitar la compresión de salida para mejorar la velocidad del sitio
+<IfModule mod_deflate.c>
+    # Compresión de tipos de archivos comunes
+    AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css
+    AddOutputFilterByType DEFLATE application/xml application/xhtml+xml application/rss+xml application/javascript application/x-javascript application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# Habilitar la caché del navegador para mejorar la velocidad de carga
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType application/x-javascript "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType application/x-shockwave-flash "access plus 1 year"
+    ExpiresByType text/html "access plus 1 minute"
+    ExpiresByType text/x-javascript "access plus 1 month"
+</IfModule>
+
+

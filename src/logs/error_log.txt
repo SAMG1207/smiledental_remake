@@ -1,0 +1,1 @@
+- 2024-10-11 17:50:30Error: [2] Undefined array key "clients_password" - C:\xampp\htdocs\smiledental\src\routes\routes.php: 20 

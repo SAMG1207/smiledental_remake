@@ -19,7 +19,9 @@ $tables = ['clients' , 'dentist' , 'adm'];
     $conn->exec($sql);
    }
 }
-
+/*
+Para la tabla del dentist se puede añadir una imagen esta estaría null
+*/
 createMainTables();
 
 
