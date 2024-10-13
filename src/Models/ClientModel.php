@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Database\Database;
+use InvalidArgumentException;
 
 Class ClientModel
 {
@@ -42,6 +43,9 @@ Class ClientModel
             return false;
         }
         $passwordToInsert = password_hash($password, PASSWORD_DEFAULT);
+        if(!DentistModel::testString($name)||!DentistModel::testString($lastname)){
+            throw new InvalidArgumentException('please check both name and lastname, only letters are admited');
+        }
         $sql = "INSERT INTO clients(clients_name, clients_lastName, clients_email, clients_password) VALUES (?,?,?,?)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(1, $name);

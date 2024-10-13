@@ -14,6 +14,11 @@ Class DentistModel{
     public function __construct(private Database $database){
         $this->conn = $this->database->getConnection();}
 
+    public static function testString(string $string):bool{
+            $regex = '/^[A-Za-zÀ-ÿ]+(?: [A-Za-zÀ-ÿ]+)*$/';
+            return preg_match($regex, $string) === 1;
+    }
+
     public function selectSpecialties():array{
        $sql = "SELECT id_specialty FROM specialties";
        $stmt = $this->conn->query($sql);
@@ -34,6 +39,9 @@ Class DentistModel{
           ):bool{
         if(!$this->isAnSpeciality($specialty)){
             throw new InvalidArgumentException('this specialty is not registered yet, so it can`t be used');
+        }
+        if(!$this->testString($dentist_name) || !$this->testString($dentist_lastName)){
+            throw new InvalidArgumentException('please check both name and lastname, only letters are admited');
         }
         $hashedPassword = password_hash($dentist_password, PASSWORD_DEFAULT);
         $sql ="INSERT INTO dentist (dentist_name, dentist_lastName, dentist_email, dentist_password, specialty) VALUES (?,?,?,?,?)";
