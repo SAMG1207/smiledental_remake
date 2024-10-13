@@ -2,7 +2,7 @@
 namespace App\Controllers;
 use App\Models\ClientModel;
 use App\Helpers\Responser;
-use App\Helpers\ClientDTO;
+use App\Helpers\DTOs\ClientDTO;
 
 Class ClientController
 {

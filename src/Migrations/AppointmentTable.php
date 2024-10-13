@@ -6,8 +6,8 @@ use App\Database\Database;
 function createTableApp(){
     $db = new Database();
     $conn = $db->getConnection();
-    $sql ="CREATE TABLE IF NOT EXISTS appoinment(
-    id_appoinment INT AUTO_INCREMENT PRIMARY KEY,
+    $sql ="CREATE TABLE IF NOT EXISTS appointment(
+    id_appointment INT AUTO_INCREMENT PRIMARY KEY,
     id_client INT NOT NULL,
     id_dentist INT NOT NULL,
     app_date DATE,

@@ -24,12 +24,16 @@ Class ClientModel
         return $stmt->rowCount() > 0;
     }
 
-    public function getId(string $email){
+    public function getId(string $email):int{
         if(!filter_var($email, FILTER_VALIDATE_EMAIL) || $this->isRegistered($email)) {
-            return false;
+            return 0;
         }
         $sql = "SELECT id FROM clients WHERE clients_email = ?";
-        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(1, $email);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        return $result;
     }
 
     public function createClient(string $name, string $lastname, string $email, string $password):bool

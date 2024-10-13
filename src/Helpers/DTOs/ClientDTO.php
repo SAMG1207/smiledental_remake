@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace App\Helpers;
+namespace App\Helpers\DTOs;
 
 Class ClientDTO{
     public function __construct(
