@@ -4,6 +4,10 @@ namespace App\Models;
 
 use App\Database\Database;
 use InvalidArgumentException;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+use PDO;
 
 Class ClientModel
 {
@@ -55,5 +59,27 @@ Class ClientModel
         return $stmt->execute();
     }
 
-    
+    public function loginClient(string $email, string $password):bool|string{
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            return false;
+        }
+        require_once __DIR__.'../core/key.php';
+        global $secretKey; 
+        $sql ="SELECT * FROM clients WHERE clients_email = ?";
+        $stmt= $this->conn->prepare($sql);
+        $stmt->bindParam(1, $email);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($user && password_verify($password, $user['clients_password'])){
+            $payload = [
+                "id" => $user['id'],
+                "email" => $user['clients_email'],  
+                "exp" => time() + 3600      // Expira en 1 hora
+            ];
+            $jwt = JWT::encode($payload, $secretKey, 'HS256');
+            return $jwt;
+        }
+        return false;
+    }
+        
 }

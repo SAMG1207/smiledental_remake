@@ -7,7 +7,9 @@ namespace App\Models;
 use App\Database\Database;
 use PDO;
 use InvalidArgumentException;
-
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use App\core\secretekey;
 Class DentistModel{
 
     private $conn;

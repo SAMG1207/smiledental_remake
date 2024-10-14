@@ -22,4 +22,16 @@ Class ClientController
         Responser::success(201, "ok"):
         Responser::error(400, 'error');
     }
+
+    public function login(ClientDTO $DTO){
+      $jwt =  $this->clientModel->loginClient(
+            $DTO->clients_email,
+            $DTO->clients_password
+      );
+      if($jwt){
+       Responser::success(200, $jwt);
+      }else{
+        Responser::error(401,'error');
+      }
+    }
 }
