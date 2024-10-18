@@ -6,7 +6,9 @@ use Phroute\Phroute\RouteCollector;
 use App\Database\Database;
 use App\Controllers\ClientController;
 use App\Models\ClientModel; 
-
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use function App\Middleware\validateJWT;
 
 //TODOS LOS NAMESPACES, CONTROLLERS Y MODELS
 $db = new Database();
@@ -19,6 +21,7 @@ $router = new RouteCollector();
 $router->post('/newclient', function() use($clientController){
     $data = json_decode(file_get_contents('php://input'), true);
     $dto = new App\Helpers\DTOs\ClientDTO(
+        id: null,
         clients_name:(string)$data['clients_name'],
         clients_lastName:(string)$data['clients_lastName'],
         clients_email:(string)$data['clients_email'],
@@ -37,4 +40,32 @@ $router->post('/newdentist', function() use($dentistController){
         specialty:(int)$data['specialty']
     );
     return $dentistController->insertDentist($dto);
+});
+
+$router->post('/clientlogin', function() use($clientController){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $dto = new App\Helpers\DTOs\ClientDTO(
+        id:null,
+        clients_name:null,
+        clients_lastName:null,
+        clients_email:(string)$data['clients_email'],
+        clients_password:(string)$data['clients_password']
+    );
+    return $clientController->login($dto);
+});
+
+
+//RUTAS PROTEGIDAS___________________________________
+$router->get('/dashboard', function($clientController) {
+    validateJWT($_REQUEST, function($request) {
+        $idRequest = $request['user']->id;
+        $dto = new App\Helpers\DTOs\ClientDTO(
+            id:(int)$idRequest,
+            clients_name:null,
+            clients_lastName:null,
+            clients_email:null,
+            clients_password:null
+        );
+        $this->ClientController->getInfoFromClient()
+    });
 });

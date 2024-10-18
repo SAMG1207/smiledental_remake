@@ -12,9 +12,11 @@ use PDO;
 Class ClientModel
 {
     private $conn;
+  
     public function __construct(private Database $database)
     { 
         $this->conn = $this->database->getConnection();
+     
     }
     
     public function isRegistered(string $email):bool
@@ -63,8 +65,7 @@ Class ClientModel
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
             return false;
         }
-        require_once __DIR__.'../core/key.php';
-        global $secretKey; 
+
         $sql ="SELECT * FROM clients WHERE clients_email = ?";
         $stmt= $this->conn->prepare($sql);
         $stmt->bindParam(1, $email);
@@ -76,10 +77,23 @@ Class ClientModel
                 "email" => $user['clients_email'],  
                 "exp" => time() + 3600      // Expira en 1 hora
             ];
-            $jwt = JWT::encode($payload, $secretKey, 'HS256');
+            $env=$_ENV['SECRET_KEY'];
+            $jwt = JWT::encode($payload, $env, 'HS256');
             return $jwt;
         }
         return false;
+    }
+
+    public function getInfoFromClient(int $id):array{
+        $sql = "SELECT * FROM clients WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(1, $id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($result){
+            return $result;
+        }
+        return[];
     }
         
 }

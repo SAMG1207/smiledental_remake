@@ -44,7 +44,7 @@ class Responser {
      * @return void
      */
     public static function error(int $code, string $message) {
-        self::response($code, $message);
+       return self::response($code, $message);
     }
 
     /**
@@ -56,6 +56,6 @@ class Responser {
      * @return void
      */
     public static function success(int $code, string|array $message) {
-        self::response($code, $message);
+       return self::response($code, $message);
     }
 }

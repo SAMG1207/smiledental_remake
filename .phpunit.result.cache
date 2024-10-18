@@ -1,0 +1,1 @@
+{"version":1,"defects":{"Tests\\TestModels\\TestClient::testLoginWithValidCredentials":8,"Tests\\TestModels\\TestClient::testLoginWithInvalidEmail":8,"Tests\\TestModels\\TestClient::testLoginWithInvalidPassword":8,"Tests\\TestModels\\TestClient::testlogin":7},"times":{"Tests\\TestModels\\TestClient::testlogin":0.085}}

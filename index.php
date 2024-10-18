@@ -6,6 +6,14 @@ header("Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS, HEAD");
 require_once __DIR__.'/src/core/error_handler.php';
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/src/routes/routes.php';
+use Dotenv\Dotenv;
+
+// Cargar el archivo .env que está en el mismo nivel
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+// Ahora puedes acceder a las variables de entorno usando getenv() o $_ENV
+$secretKey = getenv('SECRET_KEY');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204); 
