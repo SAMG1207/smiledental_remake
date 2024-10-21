@@ -2,13 +2,14 @@
 declare(strict_types=1);
 
 
+use App\Middleware\Authmiddleware;
 use Phroute\Phroute\RouteCollector;
 use App\Database\Database;
 use App\Controllers\ClientController;
 use App\Models\ClientModel; 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use function App\Middleware\validateJWT;
+use App\Middleware;
 
 //TODOS LOS NAMESPACES, CONTROLLERS Y MODELS
 $db = new Database();
@@ -56,9 +57,9 @@ $router->post('/clientlogin', function() use($clientController){
 
 
 //RUTAS PROTEGIDAS___________________________________
-$router->get('/dashboard', function($clientController) {
-    validateJWT($_REQUEST, function($request) {
-        $idRequest = $request['user']->id;
+$router->post('/dashboard', function() use($clientController) {
+    Authmiddleware::validateJWT($_REQUEST, function($decodedToken) use($clientController)  {
+        $idRequest = $decodedToken['user']->id;
         $dto = new App\Helpers\DTOs\ClientDTO(
             id:(int)$idRequest,
             clients_name:null,
@@ -66,6 +67,6 @@ $router->get('/dashboard', function($clientController) {
             clients_email:null,
             clients_password:null
         );
-        $this->ClientController->getInfoFromClient()
+        return $clientController->getInfoFromClientCtrl($dto);
     });
 });

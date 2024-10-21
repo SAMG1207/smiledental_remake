@@ -6,17 +6,19 @@ use App\Database\Database;
 use InvalidArgumentException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-
+use Dotenv\Dotenv; 
 use PDO;
 
 Class ClientModel
 {
     private $conn;
-  
+    private $privateKey;
     public function __construct(private Database $database)
     { 
         $this->conn = $this->database->getConnection();
-     
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../..');
+        $dotenv->load();
+        $this->privateKey = $_ENV['SECRET_KEY'];
     }
     
     public function isRegistered(string $email):bool
@@ -77,15 +79,16 @@ Class ClientModel
                 "email" => $user['clients_email'],  
                 "exp" => time() + 3600      // Expira en 1 hora
             ];
-            $env=$_ENV['SECRET_KEY'];
-            $jwt = JWT::encode($payload, $env, 'HS256');
+           
+            $jwt = JWT::encode($payload, $this->privateKey, 'HS256');
+
             return $jwt;
         }
         return false;
     }
 
     public function getInfoFromClient(int $id):array{
-        $sql = "SELECT * FROM clients WHERE id = ?";
+        $sql = "SELECT id, clients_name, clients_lastName, clients_email FROM clients WHERE id = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(1, $id);
         $stmt->execute();

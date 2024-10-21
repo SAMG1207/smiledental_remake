@@ -9,6 +9,7 @@ Class ClientController
     
     public function __construct(private ClientModel $clientModel)
     {
+      
     }
 
     public function insertClient(ClientDTO $DTO)
@@ -37,7 +38,7 @@ Class ClientController
       }
     }
 
-      public function getInfoFromClient(clientDTO $DTO){
+      public function getInfoFromClientCtrl(clientDTO $DTO){
         $data = $this->clientModel->getInfoFromClient($DTO->id);
         if(!empty($data)){
           Responser::success(200, $data);
