@@ -19,4 +19,14 @@ $this->dentistModel->insertDentist(
 Responser::success(201,"ok"):
 Responser::error(400, "error");
 }
+
+public function getSpecialties(){
+    $specialties = $this->dentistModel->selectSpecialties();
+    if($specialties){
+        Responser::success(200, $specialties);
+    }else{
+        Responser::error(401, "error");
+    }
+    
+}
 }

@@ -55,6 +55,10 @@ $router->post('/clientlogin', function() use($clientController){
     return $clientController->login($dto);
 });
 
+$router->get('/specialties', function() use($dentistController){
+    $dentistController->getSpecialties();
+});
+
 
 //RUTAS PROTEGIDAS___________________________________
 $router->post('/dashboard', function() use($clientController) {

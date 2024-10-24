@@ -22,14 +22,14 @@ Class DentistModel{
     }
 
     public function selectSpecialties():array{
-       $sql = "SELECT id_specialty FROM specialties";
+       $sql = "SELECT * FROM specialties";
        $stmt = $this->conn->query($sql);
-       $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // RETURNS ONLY THE NUMBER
+       $result = $stmt->fetchAll();
        return $result;
     }
 
     private function isAnSpeciality(int $number):bool{
-        return in_array($number, $this->selectSpecialties());
+        return in_array($number, $this->selectSpecialties()['specialty_id']);
     }
 
     public function insertDentist(
@@ -62,4 +62,11 @@ Class DentistModel{
         $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
         return $result?:[];
         }
+
+    public function getNotGeneralDentistId():array{
+        $sql = "SELECT id FROM dentist WHERE specialty != 1";
+        $stmt = $this->conn->query($sql);
+        $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+        return $result?:[];
+    }
 }

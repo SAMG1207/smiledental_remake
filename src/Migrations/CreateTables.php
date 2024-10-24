@@ -7,7 +7,7 @@ use App\Database\Database;
 function createMainTables(){
 $db = new Database();
 $conn = $db->getConnection();
-$tables = ['clients' , 'dentist' , 'adm'];
+$tables = ['clients' , 'adm'];
    foreach($tables as $table){
     $sql = "CREATE TABLE IF NOT EXISTS ".$table."
     (id INT AUTO_INCREMENT PRIMARY KEY,

@@ -14,7 +14,9 @@ function createGeneralTable(){
         dentist_lastName VARCHAR(50) NOT NULL,
         dentist_email VARCHAR(255) NOT NULL,
         dentist_password VARCHAR(255) NOT NULL,
-        specialty INT NOT NULL
+        specialty INT NOT NULL,
+        
+
     )";
 
 
@@ -26,7 +28,9 @@ function createSpecialtyTable(){
     $conn = $db->getConnection();
     $sql = "CREATE TABLE IF NOT EXISTS specialties (
         id_specialty INT PRIMARY KEY,
-        specialty_name VARCHAR(20) NOT NULL
+        specialty_name VARCHAR(20) NOT NULL,
+        descripcion MEDIUMTEXT NOT NULL,
+        url_image VARCHAR(255) 
     )";
     $conn->exec($sql);
 };
@@ -54,7 +58,20 @@ function addForeignKeyToDentist() {
     $conn->exec($sql);
 };
 
+function createSpecialtyDentist(){
+    $db = new Database();
+    $conn = $db->getConnection();
+    $sql = " CREATE TABLE IF NOT EXISTS specialists(
+        id_dentist INT NOT NULL,
+        url_image VARCHAR(50),
+        FOREIGN KEY (id_dentist) REFERENCES dentist(id)
+        );
+    ";
+    $conn->exec($sql);
+}
+
 //createSpecialtyTable();
 //insertSpecialties();
 //createGeneralTable();
-addForeignKeyToDentist();
+//addForeignKeyToDentist();
+createSpecialtyDentist();
