@@ -4,6 +4,8 @@ namespace App\Controllers;
 use App\Models\DentistModel;
 use App\Helpers\Responser;
 use App\Helpers\DTOs\DentistDTO;
+use App\Helpers\DTOs\ClientDTO;
+use App\Helpers\DTOs\SpecialistDto;
 
 class DentistController{
 public function __construct(private DentistModel $dentistModel){}
@@ -29,4 +31,15 @@ public function getSpecialties(){
     }
     
 }
+
+public function getSpecialists(){
+    $specialist = $this->dentistModel->getNotGeneralDentists();
+    if($specialist){
+        Responser::success(200, $specialist);
+    }else{
+        Responser::error(401, "error");
+    }
+}
+
+
 }

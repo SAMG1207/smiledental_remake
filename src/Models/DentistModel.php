@@ -10,6 +10,8 @@ use InvalidArgumentException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\core\secretekey;
+use Exception;
+
 Class DentistModel{
 
     private $conn;
@@ -28,8 +30,13 @@ Class DentistModel{
        return $result;
     }
 
+    
     private function isAnSpeciality(int $number):bool{
-        return in_array($number, $this->selectSpecialties()['specialty_id']);
+        $sql = "SELECT id_specialty FROM specialties";
+        $stmt = $this->conn->query($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // Extrae solo la primera columna como un array
+        return in_array($number, $result);
     }
 
     public function insertDentist(
@@ -63,10 +70,14 @@ Class DentistModel{
         return $result?:[];
         }
 
-    public function getNotGeneralDentistId():array{
-        $sql = "SELECT id FROM dentist WHERE specialty != 1";
-        $stmt = $this->conn->query($sql);
-        $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-        return $result?:[];
+    public function getNotGeneralDentists():array{
+        $sql = "SELECT d.id, d.dentist_name, d.dentist_lastName, s.specialty_name
+        FROM dentist d
+        INNER JOIN specialties s ON d.specialty = s.id_specialty
+        WHERE s.id_specialty != 1"; 
+       $stmt = $this->conn->query($sql);
+       $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+       return $result ?: [];
     }
+    
 }

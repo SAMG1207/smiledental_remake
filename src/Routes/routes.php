@@ -10,7 +10,7 @@ use App\Models\ClientModel;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Middleware;
-
+use App\Controllers\ImageController;
 //TODOS LOS NAMESPACES, CONTROLLERS Y MODELS
 $db = new Database();
 $clientModel = new ClientModel($db);
@@ -31,17 +31,7 @@ $router->post('/newclient', function() use($clientController){
     return $clientController->insertClient($dto);
 }); 
 
-$router->post('/newdentist', function() use($dentistController){
-    $data = json_decode(file_get_contents('php://input'), true);
-    $dto = new App\Helpers\DTOs\DentistDTO(
-        dentist_name:(string)$data['dentist_name'],
-        dentist_lastName:(string)$data['desntist_lastName'],
-        dentist_email:(string)$data['dentist_email'],
-        dentist_password:(string)$data['dentist_password'],
-        specialty:(int)$data['specialty']
-    );
-    return $dentistController->insertDentist($dto);
-});
+
 
 $router->post('/clientlogin', function() use($clientController){
     $data = json_decode(file_get_contents('php://input'), true);
@@ -55,9 +45,7 @@ $router->post('/clientlogin', function() use($clientController){
     return $clientController->login($dto);
 });
 
-$router->get('/specialties', function() use($dentistController){
-    $dentistController->getSpecialties();
-});
+
 
 
 //RUTAS PROTEGIDAS___________________________________
@@ -74,3 +62,24 @@ $router->post('/dashboard', function() use($clientController) {
         return $clientController->getInfoFromClientCtrl($dto);
     });
 });
+//DEBERÍA
+$router->post('/newdentist', function() use($dentistController){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $dto = new App\Helpers\DTOs\DentistDTO(
+        dentist_name:(string)$data['dentist_name'],
+        dentist_lastName:(string)$data['dentist_lastName'],
+        dentist_email:(string)$data['dentist_email'],
+        dentist_password:(string)$data['dentist_password'],
+        specialty:(int)$data['specialty'],
+    );
+    return $dentistController->insertDentist($dto);
+});
+
+$router->get('/specialties', function() use($dentistController){
+    $dentistController->getSpecialties();
+});
+
+$router->get('/specialists', function() use($dentistController){
+    $dentistController->getSpecialists();
+});
+

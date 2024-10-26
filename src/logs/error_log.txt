@@ -1,1 +1,4 @@
 
+
+- 2024-10-26 17:36:49 Uncaught Exception: Object of class App\Controllers\ImageController could not be converted to string in C:\xampp\htdocs\smiledental\index.php on line: 35
+- 2024-10-26 17:38:01 Uncaught Exception: Object of class App\Controllers\ImageController could not be converted to string in C:\xampp\htdocs\smiledental\index.php on line: 35
