@@ -70,8 +70,27 @@ function createSpecialtyDentist(){
     $conn->exec($sql);
 }
 
+function createSpecialtyAvailability(){
+    $db = new Database();
+    $conn = $db->getConnection();
+    $sql = " CREATE TABLE IF NOT EXISTS specialists_availabity(
+        id_availability INT PRIMARY KEY AUTO_INCREMENT,
+        id_dentist INT NOT NULL,
+        numbered_day INT NOT NULL,
+        in_at INT NOT NULL,
+        out_at INT NOT NULL,
+        FOREIGN KEY (id_dentist) REFERENCES dentist(id)
+        );
+    ";
+    $conn->exec($sql);
+}
+
+
+
+
 //createSpecialtyTable();
 //insertSpecialties();
 //createGeneralTable();
 //addForeignKeyToDentist();
-createSpecialtyDentist();
+//createSpecialtyDentist();
+createSpecialtyAvailability();

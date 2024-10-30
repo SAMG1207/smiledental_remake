@@ -79,5 +79,24 @@ Class DentistModel{
        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
        return $result ?: [];
     }
+
+    public function insertAvalabiltyOfSpecialist(int $id, int $day, int $inAt, int $outAt):bool{
+        $sql = "INSERT INTO specialists_availabity (id_dentist, numbered_day, in_at, out_at) VALUES(?,?,?,?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(1, $id);
+        $stmt->bindParam(2, $day);
+        $stmt->bindParam(3, $inAt);
+        $stmt->bindParam(4, $outAt);
+        return $stmt->execute();
+    }
+
+    public function selectAvalabilityOfSpecialist(int $id):array{
+       $sql = "SELECT * FROM specialists_availabity WHERE id_dentist = ?";
+       $stmt=$this->conn->prepare($sql);
+       $stmt->bindParam(1, $id);
+       $stmt->execute();
+       $result = $stmt->fetchAll();
+       return $result;
+    }
     
 }

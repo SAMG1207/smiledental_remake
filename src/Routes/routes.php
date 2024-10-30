@@ -83,3 +83,14 @@ $router->get('/specialists', function() use($dentistController){
     $dentistController->getSpecialists();
 });
 
+$router->post('/insertav', function() use($dentistController){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $dto = new App\Helpers\DTOs\SpecialistDTO(
+        id:(int)$data['id'],
+        day:(int)$data['day'],
+        inAt:(int)$data['inAt'],
+        outAt:(int)$data['outAt']
+    );
+    $dentistController->insertAvailabilityOfSpecialist($dto);
+});
+

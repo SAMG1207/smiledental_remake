@@ -5,7 +5,7 @@ use App\Models\DentistModel;
 use App\Helpers\Responser;
 use App\Helpers\DTOs\DentistDTO;
 use App\Helpers\DTOs\ClientDTO;
-use App\Helpers\DTOs\SpecialistDto;
+use App\Helpers\DTOs\SpecialistDTO;
 
 class DentistController{
 public function __construct(private DentistModel $dentistModel){}
@@ -41,5 +41,24 @@ public function getSpecialists(){
     }
 }
 
+public function insertAvailabilityOfSpecialist(SpecialistDTO $data){
+    $this->dentistModel->insertAvalabiltyOfSpecialist(
+     $data->id,
+     $data->day,
+     $data->inAt,
+     $data->outAt
+    )?
+    Responser::success(201, "ok"):
+    Responser::error(400, "error");
+}
+
+public function getAvalabilty(SpecialistDTO $data){
+    $availabality = $this->dentistModel->selectAvalabilityOfSpecialist($data->id);
+    if(count($availabality)>0){
+        Responser::success(200,$availabality);
+    }else{
+        Responser::error(400,"There is no fetched data");
+    }
+}
 
 }
