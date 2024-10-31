@@ -79,10 +79,32 @@ function createSpecialtyAvailability(){
         numbered_day INT NOT NULL,
         in_at INT NOT NULL,
         out_at INT NOT NULL,
-        FOREIGN KEY (id_dentist) REFERENCES dentist(id)
+        FOREIGN KEY (id_dentist) REFERENCES dentist(id),
+        FOREIGN KEY (numbered_day) REFERENCES week(id_day)
         );
     ";
     $conn->exec($sql);
+}
+
+function createWeekTable(){
+    $db = new Database();
+    $conn = $db->getConnection();
+    $sql ="CREATE TABLE IF NOT EXISTS week(
+    id_day INT PRIMARY KEY AUTO_INCREMENT,
+    day_name VARCHAR(10)
+    )";
+    $conn->exec($sql);
+}
+
+function insertDays(){
+    $db = new Database();
+    $conn = $db->getConnection();
+    $days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    for($i = 0; $i < 7; $i++){
+        $sql = "INSERT INTO week (id_day, day_name) VALUES($i, '{$days[$i]}')";
+         $conn->exec($sql);
+    }
+   
 }
 
 
@@ -93,4 +115,7 @@ function createSpecialtyAvailability(){
 //createGeneralTable();
 //addForeignKeyToDentist();
 //createSpecialtyDentist();
-createSpecialtyAvailability();
+
+createWeekTable();
+insertDays();
+//createSpecialtyAvailability();

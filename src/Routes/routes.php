@@ -45,8 +45,9 @@ $router->post('/clientlogin', function() use($clientController){
     return $clientController->login($dto);
 });
 
-
-
+$router->get('/dentists' , function() use($dentistController){
+    return $dentistController->getAllDentist();
+});
 
 //RUTAS PROTEGIDAS___________________________________
 $router->post('/dashboard', function() use($clientController) {
@@ -94,3 +95,10 @@ $router->post('/insertav', function() use($dentistController){
     $dentistController->insertAvailabilityOfSpecialist($dto);
 });
 
+$router->get('/days/{id:\d+}', function($id) use($dentistController){
+    return $dentistController->getDaysofTheWeek((int)$id);
+});
+
+$router->delete('delete/{id:\d+}', function ($id) use($dentistController){
+    return $dentistController->deleteDentist((int)$id);
+});

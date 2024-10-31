@@ -39,6 +39,7 @@ Class DentistModel{
         return in_array($number, $result);
     }
 
+
     public function insertDentist(
           string $dentist_name,
           string $dentist_lastName,
@@ -52,6 +53,12 @@ Class DentistModel{
         if(!$this->testString($dentist_name) || !$this->testString($dentist_lastName)){
             throw new InvalidArgumentException('please check both name and lastname, only letters are admited');
         }
+        if(!filter_var($dentist_email, FILTER_VALIDATE_EMAIL)){
+            throw new InvalidArgumentException('no valid email');
+        }
+        if($this->isRegistered($dentist_email)){
+            throw new InvalidArgumentException(' dentist already registered');
+        }
         $hashedPassword = password_hash($dentist_password, PASSWORD_DEFAULT);
         $sql ="INSERT INTO dentist (dentist_name, dentist_lastName, dentist_email, dentist_password, specialty) VALUES (?,?,?,?,?)";
         $stmt=$this->conn->prepare($sql);
@@ -61,6 +68,25 @@ Class DentistModel{
         $stmt->bindParam(4, $hashedPassword);
         $stmt->bindParam(5, $specialty);
         return $stmt->execute();
+    }
+
+    public function deleteDentist(int $id):bool{
+        $sql = "DELETE FROM dentist WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(1,$id);
+        $stmt->execute();
+        return true;
+    }
+
+    private function isRegistered($email):bool{
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            throw new InvalidArgumentException('no valid email');
+        }
+        $sql ="SELECT * FROM dentist WHERE dentist_email = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(1, $email);
+        $stmt->execute();
+        return $stmt->fetch() !== false;
     }
 
     public function getGeneralDentistsId():array{
@@ -97,6 +123,33 @@ Class DentistModel{
        $stmt->execute();
        $result = $stmt->fetchAll();
        return $result;
+    }
+
+    public function getDays(int $id):array{
+        $sql = "SELECT id_day, day_name 
+        FROM week
+        WHERE id_day NOT IN (0, 6) 
+        AND id_day NOT IN (
+            SELECT numbered_day 
+            FROM specialists_availabity 
+            WHERE id_dentist = ?
+        )";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(1, $id);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        return $result;
+    }
+
+    public function getAllDentist(): array {
+        $sql = "SELECT d.id, d.dentist_name, d.dentist_lastName, s.specialty_name 
+                FROM dentist d
+                INNER JOIN specialties s ON s.id_specialty = d.specialty";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        return $result;
     }
     
 }

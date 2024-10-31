@@ -61,4 +61,28 @@ public function getAvalabilty(SpecialistDTO $data){
     }
 }
 
+public function getDaysofTheWeek(int $id){
+    $days = $this->dentistModel->getDays($id);
+    if(count($days)>0){
+        Responser::success(200,$days);
+    }else{
+        Responser::error(400,"There is no fetched data");
+    }
+}
+
+public function deleteDentist(int $id){
+    $deleted = $this->dentistModel->deleteDentist($id)?
+    Responser::success(200, "Dentist Deleted"):
+    Responser::error(400, "error");
+}
+
+public function getAllDentist(){
+    $dentists = $this->dentistModel->getAllDentist();
+    if($dentists){
+      Responser::success(200, $dentists);
+    }else{
+        Responser::error(400, "There is no fetched data");
+    }
+}
+
 }
